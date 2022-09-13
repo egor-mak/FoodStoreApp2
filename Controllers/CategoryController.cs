@@ -29,22 +29,55 @@ namespace FoodStoreApp2.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(Category cat)
         {
-
-            _db.Category.Add(cat);
-            _db.SaveChanges();
-            return RedirectToAction("Index");
+            if (ModelState.IsValid)
+            {
+                _db.Category.Add(cat);
+                _db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            return View(cat);
         }
 
 
         public IActionResult Edit(int? id)
         {
-            return View();
+            if (id == null || id == 0)
+            {
+                return NotFound();
+            }
+            var cat = _db.Category.Find(id);
+            if (cat == null)
+            {
+                return NotFound();
+            }
+            return View(cat);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(Category cat)
+        {
+            if (ModelState.IsValid)
+            {
+                _db.Category.Update(cat);
+                _db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            return View(cat);
+        }
 
         public IActionResult Delete(int? id)
         {
-            return View();
+            if (id == null || id == 0)
+            {
+                return NotFound();
+            }
+            var cat = _db.Category.Find(id);
+            if (cat == null)
+            {
+                return NotFound();
+            }
+            return View(cat);
         }
 
         [HttpPost]
